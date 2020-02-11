@@ -16,7 +16,7 @@ class live(models.Model):
     videoid = models.CharField("videoid", max_length=255)
     videotitle = models.CharField("videotitle", max_length=255)
     channeltitle = models.CharField("channeltitle", max_length=255)
-    starttime = models.DateField("starttime")
+    starttime = models.DateTimeField("starttime")
 
-    def __str__(self):
-        return self.videotitle
+    def __int__(self):
+        return self.id
