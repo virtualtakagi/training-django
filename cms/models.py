@@ -18,5 +18,5 @@ class live(models.Model):
     channeltitle = models.CharField("channeltitle", max_length=255)
     starttime = models.DateTimeField("starttime")
 
-    def __int__(self):
-        return self.id
+    # def __int__(self):
+    #     return self.id

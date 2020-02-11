@@ -23,8 +23,8 @@
           <td>{{ live.videotitle }}</td>
           <td>{{ live.starttime }}</td>
           <td>
-            <a href="{% url 'cms:live_mod' live_id=live.channelid %}" class="btn btn-outline-primary btn-sm">修正</a>
-            <a href="{% url 'cms:live_del' live_id=live.channelid %}" class="btn btn-outline-danger btn-sm">削除</a>
+            <a href="{% url 'cms:live_mod' live_id=live.id %}" class="btn btn-outline-primary btn-sm">修正</a>
+            <a href="{% url 'cms:live_del' live_id=live.id %}" class="btn btn-outline-danger btn-sm">削除</a>
           </td>
         </tr>
         {% endfor %}

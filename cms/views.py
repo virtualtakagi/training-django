@@ -8,7 +8,8 @@ from cms.models import live
 def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
-    return render(request,'cms/live_list.html', {'lives': live.objects.all()})
+    lives = live.objects.all()
+    return render(request,'cms/live_list.html', {'lives': lives})
 
 
 def live_edit(request, channelid=None):
