@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
+from datetime import datetime
 # Create your views here.
 
 from cms.models import live
@@ -10,6 +11,7 @@ def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
     lives = live.objects.all().order_by('starttime')
+    lives.now = datetime.now()
     return render(request,'cms/live_list.html', {'lives': lives})
 
 
