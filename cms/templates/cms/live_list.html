@@ -16,7 +16,6 @@
       <tbody>
         {% for live in lives %}
         <tr>
-        <!-- {% if not live.starttime > live.now %} -->
           <td>
             <a href="{{ live.liveurl }}">
               <img src="{{ live.thumbnail }}" height="60" width="90">
@@ -26,7 +25,6 @@
           </td>
           <td>{{ live.starttime }}</td>
           <td>{{ live.status }}</td>
-        <!-- {% endif %} -->
         </tr>
         {% endfor %}
       </tbody>
