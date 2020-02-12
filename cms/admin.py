@@ -15,7 +15,7 @@ admin.site.register(Channel,ChannelAdmin)
 
 
 class liveAdmin(admin.ModelAdmin):
-    list_display = ('id','channelid', 'videoid', 'videotitle', 'channeltitle', 'starttime')
+    list_display = ('id','thumbnail', 'channelid', 'videoid', 'videotitle', 'channeltitle', 'starttime', 'status', 'channelurl', 'liveurl')
 
 
 admin.site.register(live, liveAdmin)

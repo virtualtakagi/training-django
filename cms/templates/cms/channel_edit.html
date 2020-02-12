@@ -1,0 +1,23 @@
+{% extends "cms/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Channel の編集{% endblock title %}
+
+{% block content %}
+    <h4 class="mt-4 mb-5 border-bottom">Edit Channel</h4>
+    {% if live %}
+    <form action="{% url 'cms:channel_mod' channel_id=channel_id %}" method="post">
+    {% else %}
+    <form action="{% url 'cms:channel_add' %}" method="post">
+    {% endif %}
+      {% csrf_token %}
+      {% bootstrap_form form layout='horizontal' %}
+      <div class="form-group row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </form>
+    <a href="{% url 'cms:channel_list' %}" class="btn btn-secondary btn-sm">Channel List</a>
+    <a href="{% url 'cms:channel_list' %}" class="btn btn-secondary btn-sm">Live List</a>
+{% endblock content %}
