@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from datetime import datetime
+from datetime import timedelta
 # Create your views here.
 
 from cms.models import live
@@ -10,8 +11,8 @@ from cms.forms import ChannelForm
 def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
-    lives = live.objects.all().order_by('starttime')
-    lives.now = datetime.now()
+    now = datetime.now() - timedelta(hours=1)
+    lives = live.objects.filter(starttime__gte=now).order_by('starttime')
     return render(request,'cms/live_list.html', {'lives': lives})
 
 
