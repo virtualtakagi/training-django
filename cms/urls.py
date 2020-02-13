@@ -11,4 +11,7 @@ urlpatterns = [
 
     # live
     path('live/', views.live_list, name='live_list'), # ライブ一覧
+
+    # GetLiveInformation
+    path('live/update', views.getLive, name="get_live")
 ]

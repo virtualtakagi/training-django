@@ -7,6 +7,9 @@ from datetime import timedelta
 from cms.models import live
 from cms.models import Channel
 from cms.forms import ChannelForm
+import json
+import requests
+from . import getlive
 
 def live_list(request):
     """Liveの一覧"""
@@ -49,3 +52,26 @@ def channel_del(request, channel_id):
     liveInstance = get_object_or_404(Channel, pk=channel_id)
     liveInstance.delete()
     return redirect('cms:channel_list')
+
+
+def getLive(request):
+    channels = Channel.objects.all()
+
+    for channel in channels:
+        
+        liveInfo = getlive.getLive(channel.channelid)
+
+        live(
+            thumbnail = liveInfo['thumbnail'],
+            channelid = liveInfo['channelid'],
+            videoid = liveInfo['videoid'],
+            videotitle = liveInfo['videotitle'],
+            channeltitle = liveInfo['channeltitle'],
+            starttime = liveInfo['starttime'],
+            status = liveInfo['status'],
+            liveurl = liveInfo['liveurl'],
+            channelurl = liveInfo['channelurl']
+        ).save()
+
+    return redirect('cms:live_list')
+    

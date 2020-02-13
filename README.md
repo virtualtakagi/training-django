@@ -14,9 +14,10 @@
 - 取得したデータは、liveテーブルに保存を行う。
 - 取得・保存する内容は、thumbnail, channeltitle, videotitle, starttime, status, liveurl, channelurl とする。
 - 処理順は次のとおり 
-    - チャンネルIDから、状態が「upcoming」の場合に限り、Video IDを取得する。
+    - Channel テーブルの channelid をキーに、状態が「upcoming」のVideo IDを取得する。
     - Video IDから、thumbnail, channeltitle, videotitle, starttime, status を取得する。
     - liveテーブルへ、thumbnail, channeltitle, videotitle, starttime, status, liveurl, channelurlを保存する。
+- 現在時刻がstarttime以降であれば、status列には live をセットする。
 - liveテーブルの starttime から12時間以上が経過した場合、該当レコードは削除対象とする。
 - レコードの削除は0時および12時に実施する。
 
@@ -30,7 +31,7 @@
 - https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId={チャネルID}
 
 - ライブストリームの詳細情報取得
-- https://www.googleapis.com/youtube/v3/video?part=snippet,liveStreamingDetails&id={VideoID}
+- https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id={VideoID}
 
 ## 参考URL
 - ライブ接続URL
