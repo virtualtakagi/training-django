@@ -2,7 +2,7 @@ import json, requests
 import datetime, dateutil.parser
 from .key import api
 
-# Access YouTube Data API
+# Access for YouTube Data API
 def getLive(channelid):
     url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
     url += channelid + "&key=" + api
