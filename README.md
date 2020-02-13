@@ -9,12 +9,14 @@
 
 ## サーバ処理（バッチ処理）
 
-- YouTubeチャンネルのIDを元に、当日に行われるブロードキャストの情報をAPI経由で取得する。
-- API経由での情報取得は0分と30分に、Channelテーブルの channelid を引数に行う。
+- YouTubeチャンネルのIDを元に、当日に行われるライブストリーミングの情報をAPI経由で取得する。
+- API経由での情報取得は毎時0分と30分および手動で、Channelテーブルの channelid を引数に行う。
+- API経由で正常に取得できなかった際にエラーメッセージを画面側に出力する。
 - 取得したデータは、liveテーブルに保存を行う。
 - 取得・保存する内容は、thumbnail, channeltitle, videotitle, starttime, status, liveurl, channelurl とする。
 - 処理順は次のとおり 
     - Channel テーブルの channelid をキーに、状態が「upcoming」のVideo IDを取得する。
+    - channelid が既に存在するかをチェックし、存在する場合は status のみ確認し差分があったら対象レコードに status のみを更新する。
     - Video IDから、thumbnail, channeltitle, videotitle, starttime, status を取得する。
     - liveテーブルへ、thumbnail, channeltitle, videotitle, starttime, status, liveurl, channelurlを保存する。
 - 現在時刻がstarttime以降であれば、status列には live をセットする。
