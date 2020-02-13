@@ -3,9 +3,12 @@ from cms import views
 
 app_name = 'cms'
 urlpatterns = [
-    # Live
-    path('live/', views.live_list, name='live_list'),   # 一覧
-    path('live/add/', views.live_edit, name='live_add'),  # 登録
-    path('live/mod/<int:live_id>/', views.live_edit, name='live_mod'),  # 修正
-    path('live/del/<int:live_id>/', views.live_del, name='live_del'),   # 削除
+    # channel
+    path('channel/', views.channel_list, name='channel_list'),   # チャンネル一覧
+    path('channel/add/', views.channel_edit, name='channel_add'),  # チャンネル登録
+    path('channel/mod/<int:channel_id>/', views.channel_edit, name='channel_mod'),  # チャンネル修正
+    path('channel/del/<int:channel_id>/', views.channel_del, name='channel_del'),   # チャンネル削除
+
+    # live
+    path('live/', views.live_list, name='live_list'), # ライブ一覧
 ]
