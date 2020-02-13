@@ -1,5 +1,5 @@
 from django.contrib import admin
-from cms.models import Channel, live
+from cms.models import Channel, Live
 
 # Register your models here.
 #admin.site.register(Channel)
@@ -14,8 +14,8 @@ class ChannelAdmin(admin.ModelAdmin):
 admin.site.register(Channel,ChannelAdmin)
 
 
-class liveAdmin(admin.ModelAdmin):
+class LiveAdmin(admin.ModelAdmin):
     list_display = ('id','thumbnail', 'channelid', 'videoid', 'videotitle', 'channeltitle', 'starttime', 'status', 'channelurl', 'liveurl')
 
 
-admin.site.register(live, liveAdmin)
+admin.site.register(Live, LiveAdmin)

@@ -4,18 +4,15 @@ from datetime import datetime
 from datetime import timedelta
 # Create your views here.
 
-from cms.models import live
-from cms.models import Channel
+from cms.models import Live,Channel
 from cms.forms import ChannelForm
-import json
-import requests
 from . import getlive
 
 def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
     now = datetime.now() - timedelta(hours=1)
-    lives = live.objects.filter(starttime__gte=now).order_by('starttime')
+    lives = Live.objects.filter(starttime__gte=now).order_by('starttime')
     return render(request,'cms/live_list.html', {'lives': lives})
 
 
@@ -55,13 +52,14 @@ def channel_del(request, channel_id):
 
 
 def getLive(request):
+    """ライブ情報の取得"""
     channels = Channel.objects.all()
 
     for channel in channels:
         
         liveInfo = getlive.getLive(channel.channelid)
 
-        live(
+        Live(
             thumbnail = liveInfo['thumbnail'],
             channelid = liveInfo['channelid'],
             videoid = liveInfo['videoid'],
