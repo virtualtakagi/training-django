@@ -13,5 +13,5 @@ urlpatterns = [
     path('live/', views.live_list, name='live_list'), # ライブ一覧
 
     # GetLiveInformation
-    path('live/update', views.getLive, name="get_live")
+    path('live/update', views.getLiveStatus, name="get_liveStatus")
 ]

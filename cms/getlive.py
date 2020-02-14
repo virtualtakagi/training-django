@@ -63,3 +63,18 @@ def getLive(channelid):
     #     print (i,v)
 
     return live
+
+def updateLive(videoid):
+
+    #channelid = "UCUc8GZfFxtmk7ZwSO7ccQ0g"
+    videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
+    videourl += videoid + "&key=" + api
+
+    # Get JSON(Video)
+    response = requests.get(url)
+    json = response.json()
+
+    # Create Live object
+    live = {'status' : json['items'][0]['liveBroadcastContent']}
+
+    return live

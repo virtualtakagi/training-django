@@ -10,7 +10,7 @@ from . import getlive
 def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
-    limit = datetime.now() - timedelta(hours=1)
+    limit = datetime.now() - timedelta(hours=2)
     limit = limit.time()
     lives = Live.objects.filter(starttime__gte=limit).order_by('starttime')
     return render(request,'cms/live_list.html', {'lives': lives})
@@ -50,26 +50,31 @@ def channel_del(request, id):
     return redirect('cms:channel_list')
 
 
-def getLive(request):
+def getLiveStatus(request):
     """ライブ情報の取得"""
     channels = Channel.objects.all()
 
     for channel in channels:
         
-        liveInfo = getlive.getLive(channel.channelid)
+        # 既に登録済みのライブ情報か
+        if Live.objects.filter(channelid=channel.channelid).exists():
 
-        if liveInfo['boolean']:
-            info, created = Live.objects.update_or_create(
-                thumbnail = liveInfo['thumbnail'],
-                channelid = liveInfo['channelid'],
-                videoid = liveInfo['videoid'],
-                videotitle = liveInfo['videotitle'],
-                channeltitle = liveInfo['channeltitle'],
-                starttime = liveInfo['starttime'],
-                status = liveInfo['status'],
-                liveurl = liveInfo['liveurl'],
-                channelurl = liveInfo['channelurl']
-            )
+            status = getlive.updateLive(exist)
+            exist.update(status=status)
+        else:
+            liveInfo = getlive.getLive(channel.channelid)
+
+            if liveInfo['boolean']:
+                info, created = Live.objects.update_or_create(
+                    thumbnail = liveInfo['thumbnail'],
+                    channelid = liveInfo['channelid'],
+                    videoid = liveInfo['videoid'],
+                    videotitle = liveInfo['videotitle'],
+                    channeltitle = liveInfo['channeltitle'],
+                    starttime = liveInfo['starttime'],
+                    status = liveInfo['status'],
+                    liveurl = liveInfo['liveurl'],
+                    channelurl = liveInfo['channelurl']
+                )
 
     return redirect('cms:live_list')
-    
