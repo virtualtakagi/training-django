@@ -22,8 +22,8 @@
           <td>{{ ch.channelid }}</td>
           <td>{{ ch.channeltitle }}</td>
           <td>
-            <a href="{% url 'cms:channel_mod' channel_id=ch.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
-            <a href="{% url 'cms:channel_del' channel_id=ch.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            <a href="{% url 'cms:channel_mod' id=ch.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+            <a href="{% url 'cms:channel_del' id=ch.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
           </td>
         </tr>
         {% endfor %}

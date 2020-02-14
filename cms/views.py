@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta, time
 # Create your views here.
 
 from cms.models import Live,Channel
@@ -11,8 +10,9 @@ from . import getlive
 def live_list(request):
     """Liveの一覧"""
     #return HttpResponse('ライブの一覧')
-    now = datetime.now() - timedelta(hours=1)
-    lives = Live.objects.filter(starttime__gte=now).order_by('starttime')
+    limit = datetime.now() - timedelta(hours=1)
+    limit = limit.time()
+    lives = Live.objects.filter(starttime__gte=limit).order_by('starttime')
     return render(request,'cms/live_list.html', {'lives': lives})
 
 
@@ -23,30 +23,29 @@ def channel_list(request):
     return render(request,'cms/channel_list.html', {'channels': ch})
 
 
-def channel_edit(request, channel_id=None):
-    """Liveの編集"""
+def channel_edit(request, id=None):
+    """Channelの編集"""
     #return HttpResponse('ライブの編集')
-    if channel_id:   # live_id が指定されている (修正時)
-        channelInstance = get_object_or_404(Channel, pk=channel_id)
-    else:         # live_id が指定されていない (追加時)
+    if id:   # id が指定されている (修正時)
+        channelInstance = get_object_or_404(Channel, pk=id)
+    else:    # id が指定されていない (追加時)
         channelInstance = Channel()
 
     if request.method == 'POST':
         form = ChannelForm(request.POST, instance=channelInstance)  # POST された request データからフォームを作成
         if form.is_valid():    # フォームのバリデーション
-            channelInstance = form.save(commit=False)
             channelInstance.save()
             return redirect('cms:channel_list')
     else:    # GET の時
         form = ChannelForm(instance=channelInstance)  # channel インスタンスからフォームを作成
 
-    return render(request, 'cms/channel_edit.html', dict(form=form, channel_id=channel_id))
+    return render(request, 'cms/channel_edit.html', dict(form=form, id=id))
 
 
-def channel_del(request, channel_id):
+def channel_del(request, id):
     """ライブの削除"""
     #return HttpResponse("ライブの削除")
-    liveInstance = get_object_or_404(Channel, pk=channel_id)
+    liveInstance = get_object_or_404(Channel, pk=id)
     liveInstance.delete()
     return redirect('cms:channel_list')
 
@@ -59,17 +58,18 @@ def getLive(request):
         
         liveInfo = getlive.getLive(channel.channelid)
 
-        Live(
-            thumbnail = liveInfo['thumbnail'],
-            channelid = liveInfo['channelid'],
-            videoid = liveInfo['videoid'],
-            videotitle = liveInfo['videotitle'],
-            channeltitle = liveInfo['channeltitle'],
-            starttime = liveInfo['starttime'],
-            status = liveInfo['status'],
-            liveurl = liveInfo['liveurl'],
-            channelurl = liveInfo['channelurl']
-        ).save()
+        if liveInfo['boolean']:
+            info, created = Live.objects.update_or_create(
+                thumbnail = liveInfo['thumbnail'],
+                channelid = liveInfo['channelid'],
+                videoid = liveInfo['videoid'],
+                videotitle = liveInfo['videotitle'],
+                channeltitle = liveInfo['channeltitle'],
+                starttime = liveInfo['starttime'],
+                status = liveInfo['status'],
+                liveurl = liveInfo['liveurl'],
+                channelurl = liveInfo['channelurl']
+            )
 
     return redirect('cms:live_list')
     

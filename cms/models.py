@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 class Channel(models.Model):
     # チャンネル情報
-    channelid = models.CharField("channelid", max_length=255)
-    channeltitle = models.CharField("title", max_length=255)
+    channelid = models.CharField("channelid", max_length=255, unique=True)
+    channeltitle = models.CharField("title", max_length=255, unique=True)
 
     # def __str__(self):
     #     return self.channeltitle
@@ -13,10 +13,10 @@ class Channel(models.Model):
 class Live(models.Model):
     # ライブ情報
     thumbnail = models.CharField("thumbnail", max_length=255)
-    channelid = models.CharField("channelid", max_length=255)
-    videoid = models.CharField("videoid", max_length=255)
+    channelid = models.CharField("channelid", max_length=255, unique=True)
+    videoid = models.CharField("videoid", max_length=255, unique=True)
     videotitle = models.CharField("videotitle", max_length=255)
-    channeltitle = models.CharField("channeltitle", max_length=255)
+    channeltitle = models.CharField("channeltitle", max_length=255, unique=True)
     starttime = models.TimeField("starttime")
     status = models.CharField("status", max_length=10)
     liveurl = models.CharField("liveurl",max_length=255)

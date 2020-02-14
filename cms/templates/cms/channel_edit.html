@@ -1,12 +1,12 @@
 {% extends "cms/base.html" %}
 {% load bootstrap4 %}
 
-{% block title %}Channel の編集{% endblock title %}
+{% block title %}Edit Channel{% endblock title %}
 
 {% block content %}
     <h4 class="mt-4 mb-5 border-bottom">Edit Channel</h4>
     {% if live %}
-    <form action="{% url 'cms:channel_mod' channel_id=channel_id %}" method="post">
+    <form action="{% url 'cms:channel_mod' id=id %}" method="post">
     {% else %}
     <form action="{% url 'cms:channel_add' %}" method="post">
     {% endif %}

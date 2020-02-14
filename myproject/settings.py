@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cms.apps.CmsConfig',   # 追加
     'bootstrap4',           # 追加
+    'import_export',        # 追加
 ]
 
 MIDDLEWARE = [
