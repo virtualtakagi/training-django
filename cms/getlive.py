@@ -1,21 +1,31 @@
+from cms.key import api
 import json
 import requests
 import datetime
 import dateutil.parser
 import time
 import pytz
-from cms.key import api
+from logging import getLogger, StreamHandler, DEBUG
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
 
 # Access for YouTube Data API
 
 
 def getLive(channelid):
 
+    logger.debug('Start getLive...')
+
     # channelid = "UCd9BXPj-KcMTh0HiB-Vlb8A"
     url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
     url += channelid + "&key=" + api
 
     # Get JSON(Channel)
+    logger.debug('Get Channel JSON... ID:' + channelid)
     response = requests.get(url)
     json = response.json()
 
@@ -26,6 +36,7 @@ def getLive(channelid):
     videourl += videoid + "&key=" + api
 
     # Get JSON(Video)
+    logger.debug('Get Video JSON... ID:' + videoid)
     response = requests.get(videourl)
     json = response.json()
 
@@ -42,7 +53,6 @@ def getLive(channelid):
             'status': "upcoming",
             'liveurl': liveurl,
             'channelurl': channelurl,
-            'boolean' : True
             }
 
     # convert iso8601 -> JST
@@ -51,30 +61,46 @@ def getLive(channelid):
         live['starttime']).astimezone(JST)
 
     # check date
-    now = datetime.date.today()
+    today = datetime.date.today()
     startdate = jst_timestamp.date()
-    if now != startdate:
-        live['boolean'] = False
+    if today != startdate:
+        return False
 
     # convert datetime to time
     live['starttime'] = jst_timestamp.strftime("%H:%M")
 
-    # for i,v in live.items():
-    #     print (i,v)
+    logger.debug('Return Live Object.')
 
     return live
 
+
 def updateLive(videoid):
 
+    logger.debug('Start updateLive...')
     #channelid = "UCUc8GZfFxtmk7ZwSO7ccQ0g"
     videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
     videourl += videoid + "&key=" + api
 
     # Get JSON(Video)
-    response = requests.get(url)
+    logger.debug('Get Video JSON... ID:' + videoid)
+    response = requests.get(videourl)
     json = response.json()
 
-    # Create Live object
-    live = {'status' : json['items'][0]['liveBroadcastContent']}
+    # Check Date
+    live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
+    live = datetime.datetime.fromisoformat(live[:-1])
 
-    return live
+    # Compare Date
+    today = datetime.date.today()
+    startdate = live.date()
+    if today != startdate:
+        logger.debug("this live information is delete target.")
+        return False
+
+    # Check Live Status
+    if json['items'][0]['snippet']['liveBroadcastContent'] != "none":
+        logger.info('Return Live Status.')
+        return json['items'][0]['snippet']['liveBroadcastContent']
+
+
+    return False
