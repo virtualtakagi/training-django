@@ -5,6 +5,7 @@ import datetime
 import dateutil.parser
 import time
 import pytz
+from requests.exceptions import Timeout
 from logging import getLogger, StreamHandler, DEBUG
 logger = getLogger(__name__)
 handler = StreamHandler()
@@ -26,10 +27,24 @@ def getLive(channelid):
 
     # Get JSON(Channel)
     logger.debug('Get Channel JSON... ID:' + channelid)
-    response = requests.get(url)
-    json = response.json()
+    try:
+        response = requests.get(url, timeout=3.5)
+        json = response.json()
+    except Timeout:
+        logger.debug("JSON Request is TimeOut.")
+        return False
+
+    # Check Response
+    if response.status_code != 200:
+        logger.debug("Bad Response!!! ")
+        return False
+
 
     # Get VideoID
+    if len(json['items']) == 0:
+        logger.debug("This Channel is not upcoming")
+        return False
+    
     videoid = json['items'][0]['id']['videoId']
 
     videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
@@ -37,9 +52,19 @@ def getLive(channelid):
 
     # Get JSON(Video)
     logger.debug('Get Video JSON... ID:' + videoid)
-    response = requests.get(videourl)
-    json = response.json()
+    try:
+        response = requests.get(videourl, timeout=3.5)
+        json = response.json()
+    except Timeout:
+        logger.debug("JSON Request is TimeOut.")
+        return False
 
+    # Check Response
+    if response.status_code != 200:
+        logger.debug("Bad Response!!! ")
+        return False
+
+    # Create Live URL
     channelurl = "https://www.youtube.com/channel/" + channelid
     liveurl = channelurl + "/live"
 
@@ -83,8 +108,17 @@ def updateLive(videoid):
 
     # Get JSON(Video)
     logger.debug('Get Video JSON... ID:' + videoid)
-    response = requests.get(videourl)
-    json = response.json()
+    try:
+        response = requests.get(videourl, timeout=3.5)
+        json = response.json()
+    except Timeout:
+        logger.debug("JSON Request is TimeOut.")
+        return False
+    
+    # Check Response
+    if response.status_code != 200:
+        logger.debug("Bad Response!!! ")
+        return False
 
     # Check Date
     live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
@@ -101,6 +135,5 @@ def updateLive(videoid):
     if json['items'][0]['snippet']['liveBroadcastContent'] != "none":
         logger.info('Return Live Status.')
         return json['items'][0]['snippet']['liveBroadcastContent']
-
 
     return False

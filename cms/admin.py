@@ -17,7 +17,7 @@ class ChannelResource(resources.ModelResource):
 class ChannelAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用する
     ordering = ['id']
-    list_display = ('channelid', 'channeltitle')
+    list_display = ('id','channelid', 'channeltitle')
 
 
 # class ChannelAdmin(admin.ModelAdmin):

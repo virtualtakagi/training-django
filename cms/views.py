@@ -5,6 +5,13 @@ from datetime import datetime, timedelta, time
 from cms.models import Live, Channel
 from cms.forms import ChannelForm
 from . import getlive
+from logging import getLogger, StreamHandler, DEBUG
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
 
 
 def live_list(request):
@@ -48,28 +55,32 @@ def getLiveStatus(request):
 
     for channel in channels:
 
-        # 既に登録済みのライブ情報か
+        # Check Exists Record
         if Live.objects.filter(channelid=channel.channelid).exists():
 
+            # Get Live Record
             channelObj = Live.objects.get(channelid=channel.channelid)
 
-            # ライブステータスの確認
+            # Get Live Status
             status = getlive.updateLive(channelObj.videoid)
 
             if status != False:
-                # 更新
+                # Update
                 obj = Live.objects.filter(channelid=channel.channelid)
                 obj.update(status=status)
+                logger.debug("Update Record: " + channel.channeltitle + ", " + "Status: " + status)
                 return redirect('cms:live_list')
             else:
-                # ライブ終了なら削除
+                # Delete
                 channelObj.delete()
+                logger.debug("Delete Live: " + channel.channeltitle)
                 return redirect('cms:live_list')
         else:
-            # 新規追加
+            # Create
             liveInfo = getlive.getLive(channel.channelid)
 
             if liveInfo != False:
+                logger.debug("create Record: " + liveInfo['channeltitle'])
                 info, created = Live.objects.update_or_create(
                     thumbnail=liveInfo['thumbnail'],
                     channelid=liveInfo['channelid'],
