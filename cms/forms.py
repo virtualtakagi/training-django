@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from cms.models import Channel
 
 class ChannelForm(ModelForm):
-    """チャンネルの追加フォーム"""
+# Add Channel
 
     class Meta:
         model = Channel

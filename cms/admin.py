@@ -3,19 +3,16 @@ from cms.models import Channel, Live
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-# Register your models here.
-# admin.site.register(Channel)
-# admin.site.register(live)
 
 class ChannelResource(resources.ModelResource):
-    # Modelに対するdjango-import-exportの設定
+    # Setting Django-import-export for Model
     class Meta:
         model = Channel
 
 
 @admin.register(Channel)
 class ChannelAdmin(ImportExportModelAdmin):
-    # ImportExportModelAdminを利用する
+    # Using ImportExportModelAdmin
     ordering = ['id']
     list_display = ('id','channelid', 'channeltitle')
 
