@@ -14,9 +14,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-# Access for YouTube Data API
-
-
+# Access to YouTube Data API
 def getLive(channelid):
 
     logger.debug('Start getLive...')

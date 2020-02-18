@@ -13,43 +13,45 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-
+# Display Live List
 def live_list(request):
     limit = datetime.now() - timedelta(hours=2)
     limit = limit.time()
     lives = Live.objects.filter(starttime__gte=limit).order_by('starttime')
     return render(request, 'cms/live_list.html', {'lives': lives})
 
-
+# Display Channel List
 def channel_list(request):
     ch = Channel.objects.all().order_by('id')
     return render(request, 'cms/channel_list.html', {'channels': ch})
 
-
+# Edit Channel
 def channel_edit(request, id=None):
-    if id:   # 修正時
+    # Update
+    if id:
         channelInstance = get_object_or_404(Channel, pk=id)
-    else:    # 追加時
+    # Create
+    else:
         channelInstance = Channel()
-
+    # Update
     if request.method == 'POST':
-        # POST された request データからフォームを作成
         form = ChannelForm(request.POST, instance=channelInstance)
-        if form.is_valid():    # フォームのバリデーション
+        # Validation Form
+        if form.is_valid():
             channelInstance.save()
             return redirect('cms:channel_list')
-    else:    # GET の時
-        form = ChannelForm(instance=channelInstance)  # channel インスタンスからフォームを作成
+    else:
+        form = ChannelForm(instance=channelInstance)
 
     return render(request, 'cms/channel_edit.html', dict(form=form, id=id))
 
-
+# Delete Channel
 def channel_del(request, id):
     liveInstance = get_object_or_404(Channel, pk=id)
     liveInstance.delete()
     return redirect('cms:channel_list')
 
-
+# Request Live Status
 def getLiveStatus(request):
     channels = Channel.objects.all()
 
