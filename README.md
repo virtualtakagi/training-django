@@ -42,10 +42,10 @@
 
 ## YouTube Data API v3
 - チャンネル情報取得
-- https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId={チャネルID}
+    - https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId={チャネルID}
 
 - ライブストリームの詳細情報取得
-- https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id={VideoID}
+    - https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id={VideoID}
 
 ## 参考URL
 - ライブストリームURL
