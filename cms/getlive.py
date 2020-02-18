@@ -5,6 +5,8 @@ import datetime
 import dateutil.parser
 import time
 import pytz
+import cssselect
+import lxml.html
 from requests.exceptions import Timeout
 from logging import getLogger, StreamHandler, DEBUG
 logger = getLogger(__name__)
@@ -22,31 +24,62 @@ def getLive(channelid):
     logger.debug('Start getLive...')
 
     # channelid = "UCd9BXPj-KcMTh0HiB-Vlb8A"
-    url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
-    url += channelid + "&key=" + api
+    # url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
+    # url += channelid + "&key=" + api
 
     # Get JSON(Channel)
-    logger.debug('Get Channel JSON... ID:' + channelid)
+    # logger.debug('Get Channel JSON... ID:' + channelid)
+    # try:
+    #     response = requests.get(url, timeout=3.5)
+    #     json = response.json()
+    # except Timeout:
+    #     logger.debug("JSON Request is TimeOut.")
+    #     return False
+
+    # # Check Response
+    # if response.status_code != 200:
+    #     logger.debug("Bad Response!!! ")
+    #     return False
+
+
+    # Get VideoID
+    # if len(json['items']) == 0:
+    #     logger.debug("This Channel is not upcoming")
+    #     return False
+
+    # Create Live URL
+    channelurl = "https://www.youtube.com/channel/" + channelid
+    liveurl = channelurl + "/live"
+
+    # Get HTML Source
+    logger.debug('Get HTML Source.')
     try:
-        response = requests.get(url, timeout=3.5)
-        json = response.json()
+        response = requests.get(liveurl, timeout=3.5).text
     except Timeout:
         logger.debug("JSON Request is TimeOut.")
         return False
 
-    # Check Response
-    if response.status_code != 200:
-        logger.debug("Bad Response!!! ")
-        return False
+    # Parse VideoID
+    logger.debug('Parse VideoID...')
+    # try:
 
+    target_html = lxml.html.fromstring(response)
+    target_url = target_html.cssselect('meta[property="og:url"]')[0].get('content')
+    
+    logger.debug("Get videourl : " + target_url)
+    # except Exception:
+    #     logger.debug('VideoID Parse Failed.')
+    #     return False
+    
+    # videoid = json['items'][0]['id']['videoId']
 
-    # Get VideoID
-    if len(json['items']) == 0:
-        logger.debug("This Channel is not upcoming")
+    if target_url == liveurl or len(target_url[32:]) > 10:
+        logger.debug('This live is Offline')
         return False
     
-    videoid = json['items'][0]['id']['videoId']
-
+    videoid = target_url[32:]
+    
+    logger.debug("concat id: " + videoid)
     videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
     videourl += videoid + "&key=" + api
 
@@ -63,10 +96,6 @@ def getLive(channelid):
     if response.status_code != 200:
         logger.debug("Bad Response!!! ")
         return False
-
-    # Create Live URL
-    channelurl = "https://www.youtube.com/channel/" + channelid
-    liveurl = channelurl + "/live"
 
     # Create live
     live = {'thumbnail': json['items'][0]['snippet']['thumbnails']['default']['url'],

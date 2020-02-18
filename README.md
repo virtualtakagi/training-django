@@ -28,8 +28,9 @@
 - 対象のチャンネル情報をCSVファイルで用意し、一括追加を行う。
 
 ## API
-- チャンネル情報取得（状態・サムネ・VideoID）
-- https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId={チャネルID}
+
+<!-- - チャンネル情報取得（状態・サムネ・VideoID）
+- https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId={チャネルID} -->
 
 - ライブストリームの詳細情報取得
 - https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id={VideoID}
@@ -39,4 +40,4 @@
 - https://www.youtube.com/channel/チャンネルID/live
 - https://www.youtube.com/watch?v=VideoID
     - ライブの状態・サムネ・チャンネル名・ライブ名・リンクURLはチャンネルIDから取得可能。
-    - 開始時刻を取得したい場合は別APIを叩かなけばいけない。
+    - 開始時刻を取得したい場合はVideo:list APIを叩かなけばいけない。
