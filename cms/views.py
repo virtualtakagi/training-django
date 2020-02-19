@@ -21,7 +21,7 @@ def live_list(request):
     # Query Set
     lives = Live.objects.filter(
         Q(starttime__gte=limit) |
-        Q(status='Live🔴')
+        Q(status='Live')
     ).order_by('starttime')
     return render(request, 'cms/live_list.html', {'lives': lives})
 

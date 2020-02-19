@@ -10,8 +10,8 @@ urlpatterns = [
     path('channel/del/<int:id>/', views.channel_del, name='channel_del'),   # チャンネル削除
 
     # live
-    path('live/', views.live_list, name='live_list'), # ライブ一覧
+    path('', views.live_list, name='live_list'), # ライブ一覧
 
     # GetLiveInformation
-    path('live/update', views.getLiveStatus, name="get_liveStatus")
+    path('update', views.getLiveStatus, name="get_liveStatus")
 ]
