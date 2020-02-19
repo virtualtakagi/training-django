@@ -19,7 +19,7 @@ logger.propagate = False
 # Access to YouTube Data API
 def getLive(channelid):
 
-    logger.debug('Start getLive...')
+    logger.debug('##### Start getLive #####')
 
     # channelid = "UCd9BXPj-KcMTh0HiB-Vlb8A"
     # url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
@@ -58,12 +58,16 @@ def getLive(channelid):
         return False
 
     # Parse VideoID
-    logger.debug('Parse VideoID...')
+    logger.debug('Parse VideoID...Channel ID: ' + channelid)
     # try:
 
     target_html = lxml.html.fromstring(response)
-    target_url = target_html.cssselect('meta[property="og:url"]')[0].get('content')
-    
+    try:
+        target_url = target_html.cssselect('meta[property="og:url"]')[0].get('content')
+    except Exception:
+        logger.debug("Illegal Response. Can't Get Status.")
+        return False
+
     logger.debug("Get videourl : " + target_url)
     # except Exception:
     #     logger.debug('VideoID Parse Failed.')
@@ -71,13 +75,17 @@ def getLive(channelid):
     
     # videoid = json['items'][0]['id']['videoId']
 
-    if target_url == liveurl or len(target_url[32:]) > 10:
-        logger.debug('This live is Offline')
+    if target_url == liveurl[:-5]:
+        logger.debug("Not Setting LiveStream : " + liveurl[:-5])
         return False
+    else:
+        target_url = target_html.cssselect('meta[property="og:image"]')[0].get('content')
     
-    videoid = target_url[32:]
-    
-    logger.debug("concat id: " + videoid)
+    # split URL
+    videoid_tmp = target_url.split('/')
+    videoid = videoid_tmp[4]
+
+    # concat videourl
     videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
     videourl += videoid + "&key=" + api
 
@@ -95,19 +103,37 @@ def getLive(channelid):
         logger.debug("Bad Response!!! ")
         return False
 
-    # Create live
-    live = {'thumbnail': json['items'][0]['snippet']['thumbnails']['default']['url'],
-            'channelid': json['items'][0]['snippet']['channelId'],
-            'videoid': videoid,
-            'videotitle': json['items'][0]['snippet']['title'],
-            'channeltitle': json['items'][0]['snippet']['channelTitle'],
-            'starttime': json['items'][0]['liveStreamingDetails']['scheduledStartTime'],
-            'status': "upcoming",
-            'liveurl': liveurl,
-            'channelurl': channelurl,
-            }
+    # Check Live Status / Check Offline
+    if json['items'][0]['snippet']['liveBroadcastContent'] == 'none':
+        logger.info('This Stream is Offline.')
+        return False
 
-    # convert iso8601 -> JST
+    # Check Live Status
+    if json['items'][0]['snippet']['liveBroadcastContent'] == 'live':
+        live = {'thumbnail': json['items'][0]['snippet']['thumbnails']['default']['url'],
+                'channelid': json['items'][0]['snippet']['channelId'],
+                'videoid': videoid,
+                'videotitle': json['items'][0]['snippet']['title'],
+                'channeltitle': json['items'][0]['snippet']['channelTitle'],
+                'starttime': json['items'][0]['liveStreamingDetails']['actualStartTime'],
+                'status': "Live🔴",
+                'liveurl': liveurl,
+                'channelurl': channelurl,
+        }
+    else:
+        # Live Status [upcoming]
+        live = {'thumbnail': json['items'][0]['snippet']['thumbnails']['default']['url'],
+                'channelid': json['items'][0]['snippet']['channelId'],
+                'videoid': videoid,
+                'videotitle': json['items'][0]['snippet']['title'],
+                'channeltitle': json['items'][0]['snippet']['channelTitle'],
+                'starttime': json['items'][0]['liveStreamingDetails']['scheduledStartTime'],
+                'status': "Upcoming⌛",
+                'liveurl': liveurl,
+                'channelurl': channelurl,
+                }
+
+    # convert date iso8601 -> JST
     JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
     jst_timestamp = dateutil.parser.parse(
         live['starttime']).astimezone(JST)
@@ -121,14 +147,12 @@ def getLive(channelid):
     # convert datetime to time
     live['starttime'] = jst_timestamp.strftime("%H:%M")
 
-    logger.debug('Return Live Object.')
-
     return live
 
 
 def updateLive(videoid):
 
-    logger.debug('Start updateLive...')
+    logger.debug('##### Start updateLive #####')
     #channelid = "UCUc8GZfFxtmk7ZwSO7ccQ0g"
     videourl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id="
     videourl += videoid + "&key=" + api
@@ -147,9 +171,21 @@ def updateLive(videoid):
         logger.debug("Bad Response!!! ")
         return False
 
-    # Check Date
-    live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
-    live = datetime.datetime.fromisoformat(live[:-1])
+    # Check Live Status
+    if json['items'][0]['snippet']['liveBroadcastContent'] == "none":
+        logger.debug("This Stream is Offline.")
+        return False
+    
+    # live 
+    if json['items'][0]['snippet']['liveBroadcastContent'] == "live":
+        live = json['items'][0]['liveStreamingDetails']['actualStartTime']
+        live = datetime.datetime.fromisoformat(live[:-1])
+        status = "Live🔴"
+    else:
+        # upcoming or completed
+        live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
+        live = datetime.datetime.fromisoformat(live[:-1])
+        status = "Upcoming⌛"
 
     # Compare Date
     today = datetime.date.today()
@@ -158,9 +194,4 @@ def updateLive(videoid):
         logger.debug("this live information is delete target.")
         return False
 
-    # Check Live Status
-    if json['items'][0]['snippet']['liveBroadcastContent'] != "none":
-        logger.info('Return Live Status.')
-        return json['items'][0]['snippet']['liveBroadcastContent']
-
-    return False
+    return status

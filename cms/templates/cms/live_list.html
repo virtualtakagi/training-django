@@ -1,15 +1,14 @@
 {% extends "cms/base.html" %}
-{% block title %}Liverary{% endblock title %}
+{% block title %}Liverary - LiveStream List{% endblock title %}
 
 {% block content %}
-    <h4 class="mt-4 border-bottom">Live Table</h4>
+    <h4 class="mt-4 border-bottom">LiveStream List</h4>
     <a href="{% url 'cms:channel_list' %}" class="btn btn-primary btn-sm my-3">Channel List</a>
-    <a href="{% url 'cms:get_liveStatus' %}" class="btn btn-primary btn-sm my-3">Update Live List</a>
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th scope="col">Channnel / Live Title</th>
-          <th scope="col">Scheduled Time</th>
+          <th scope="col">Channel / LiveStream Title</th>
+          <th scope="col">Start Time</th>
           <th scope="col">Live Status</th>
         </tr>
       </thead>
@@ -17,14 +16,26 @@
         {% for live in lives %}
         <tr>
           <td>
-            <a href="{{ live.liveurl }}">
-              <img src="{{ live.thumbnail }}" height="60" width="90">
-            </a>
-            <a href="{{ live.channelurl }}">{{ live.channeltitle }}</a><br>
-            <a href="{{ live.liveurl }}">{{ live.videotitle }}</a>
+            <div class="thumb">
+              <a href="{{ live.liveurl }}">
+                <img src="{{ live.thumbnail }}" height="90" width="120">
+              </a>
+            </div>
+            <div class="info">
+              <a href="{{ live.channelurl }}">{{ live.channeltitle }}</a><br>
+              <a href="{{ live.liveurl }}">{{ live.videotitle }}</a>
+            </div>
           </td>
-          <td>{{ live.starttime }}</td>
-          <td>{{ live.status }}</td>
+          <td>
+            <div class="time">
+              {{ live.starttime }}
+            </div>
+          </td>
+          <td>
+            <div class="status">
+              {{ live.status }}
+            </div>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
