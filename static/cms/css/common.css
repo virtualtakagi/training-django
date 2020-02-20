@@ -1,0 +1,50 @@
+* {
+    font-size: 14px;
+    background-color: #424242;
+    color:#FFF;
+}
+
+.button {
+    background-color: #5a595b;
+}
+
+.thumb {
+    padding: 0;
+    margin: 0;
+}
+
+.info {
+    padding: 0;
+    margin: 0;
+}
+
+.channel > a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.channel > a:hover {
+    color: #FFF;
+}
+
+.title > a {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.time > p{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.status{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.live {
+    color: red;
+    font-weight: bold;
+}
