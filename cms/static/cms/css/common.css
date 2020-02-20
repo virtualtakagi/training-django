@@ -1,36 +1,50 @@
 * {
     font-size: 14px;
+    background-color: #424242;
+    color:#FFF;
 }
 
-a {
-    text-decoration: none;
-}
-
-a:hover{
-    text-decoration: none;
+.button {
+    background-color: #5a595b;
 }
 
 .thumb {
-    padding-right: inherit;
+    padding: 0;
     margin: 0;
-    display: inline-block;
 }
 
 .info {
     padding: 0;
     margin: 0;
-    display: inline-block;
 }
 
-.time {
+.channel > a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.channel > a:hover {
+    color: #FFF;
+}
+
+.title > a {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.time > p{
     padding: 0;
     margin: 0;
     text-align: center;
 }
 
-.status {
+.status{
     padding: 0;
     margin: 0;
     text-align: center;
-    color:red;
+}
+
+.live {
+    color: red;
+    font-weight: bold;
 }

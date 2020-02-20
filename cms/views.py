@@ -16,7 +16,6 @@ logger.propagate = False
 # Display Live Information
 def live_list(request):
     limit = datetime.now() - timedelta(hours=2)
-    limit = limit.time()
 
     # Query Set
     lives = Live.objects.filter(

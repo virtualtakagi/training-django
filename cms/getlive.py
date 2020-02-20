@@ -104,18 +104,21 @@ def getLive(channelid):
                 }
 
     # convert date iso8601 -> JST
-    JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+    #JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
     jst_timestamp = dateutil.parser.parse(
-        live['starttime']).astimezone(JST)
+        live['starttime']).astimezone(pytz.timezone('Asia/Tokyo'))
 
-    # check date
-    today = datetime.date.today()
-    startdate = jst_timestamp.date()
-    if today != startdate:
+    # Compare Date
+    now = datetime.datetime.now(dateutil.tz.tzlocal())
+    later = now + datetime.timedelta(hours=24)
+    
+    if jst_timestamp >= later:
+        logger.debug("----- Invalid StartTime -----")
         return False
-
-    # convert datetime to time
-    live['starttime'] = jst_timestamp.strftime("%H:%M")
+    
+    live['starttime'] = jst_timestamp
+     # convert datetime to time
+    #live['starttime'] = jst_timestamp.strftime("%Y-%m-%d %H:%M")
 
     return live
 
@@ -148,20 +151,20 @@ def updateLive(videoid):
     
     # live 
     if json['items'][0]['snippet']['liveBroadcastContent'] == "live":
-        live = json['items'][0]['liveStreamingDetails']['actualStartTime']
-        live = datetime.datetime.fromisoformat(live[:-1])
+        startDateTime = json['items'][0]['liveStreamingDetails']['actualStartTime']
+        startDateTime = datetime.datetime.fromisoformat(startDateTime[:-1])
         status = "Live"
     else:
         # upcoming or completed
-        live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
-        live = datetime.datetime.fromisoformat(live[:-1])
+        startDateTime = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
+        startDateTime = datetime.datetime.fromisoformat(startDateTime[:-1])
         status = "Upcoming"
 
     # Compare Date
-    today = datetime.date.today()
-    startdate = live.date()
-    if today != startdate:
-        logger.debug("this live information is delete target.")
+    now = datetime.datetime.now()
+    ago = now - datetime.timedelta(hours=12)
+    if ago >= startDateTime:
+        logger.debug("----- this live information is delete target -----")
         return False
 
     return status

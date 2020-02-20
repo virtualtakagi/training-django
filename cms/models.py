@@ -14,7 +14,7 @@ class Live(models.Model):
     videoid = models.CharField("videoid", max_length=255, unique=True)
     videotitle = models.CharField("videotitle", max_length=255)
     channeltitle = models.CharField("channeltitle", max_length=255)
-    starttime = models.TimeField("starttime")
+    starttime = models.DateTimeField("starttime")
     status = models.CharField("status", max_length=10)
     liveurl = models.CharField("liveurl",max_length=255)
     channelurl = models.CharField("channelurl",max_length=255)
