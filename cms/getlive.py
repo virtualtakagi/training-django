@@ -145,7 +145,11 @@ def updateLive(videoid):
         return False
 
     # Check Live Status
-    if json['items'][0]['snippet']['liveBroadcastContent'] == "none":
+    try:       
+        if json['items'][0]['snippet']['liveBroadcastContent'] == "none":
+            logger.debug("This Stream is Offline.")
+            return False
+    except Exception:
         logger.debug("This Stream is Offline.")
         return False
     
