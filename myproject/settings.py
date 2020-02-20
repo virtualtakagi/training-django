@@ -130,6 +130,7 @@ STATIC_URL = '/static/'
 #     os.path.join(BASE_DIR, 'static'),
 # )
 DEBUG = False
+SECURE_SSL_REDIRECT = True
 
 try:
     from .local_settings import *
@@ -141,4 +142,3 @@ if not DEBUG:
     django_heroku.settings(locals())
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-SECURE_SSL_REDIRECT = True
