@@ -104,9 +104,9 @@ def getLive(channelid):
                 }
 
     # convert date iso8601 -> JST
-    #JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+    JST = pytz.timezone('Asia/Tokyo')
     jst_timestamp = dateutil.parser.parse(
-        live['starttime']).astimezone(pytz.timezone('Asia/Tokyo'))
+        live['starttime']).astimezone(JST)
 
     # Compare Date
     now = datetime.datetime.now(dateutil.tz.tzlocal())
