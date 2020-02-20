@@ -15,11 +15,11 @@ logger.propagate = False
 
 # Display Live Information
 def live_list(request):
-    limit = datetime.now() - timedelta(hours=2)
+    # limit = datetime.now() - timedelta(hours=2)
 
     # Query Set
     lives = Live.objects.filter(
-        Q(starttime__gte=limit) |
+        Q(status='Upcoming') |
         Q(status='Live')
     ).order_by('starttime')
     return render(request, 'cms/live_list.html', {'lives': lives})
