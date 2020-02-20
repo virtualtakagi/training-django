@@ -21,30 +21,6 @@ def getLive(channelid):
 
     logger.debug('##### Start getLive #####')
 
-    # channelid = "UCd9BXPj-KcMTh0HiB-Vlb8A"
-    # url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&eventType=upcoming&channelId="
-    # url += channelid + "&key=" + api
-
-    # Get JSON(Channel)
-    # logger.debug('Get Channel JSON... ID:' + channelid)
-    # try:
-    #     response = requests.get(url, timeout=3.5)
-    #     json = response.json()
-    # except Timeout:
-    #     logger.debug("JSON Request is TimeOut.")
-    #     return False
-
-    # # Check Response
-    # if response.status_code != 200:
-    #     logger.debug("Bad Response!!! ")
-    #     return False
-
-
-    # Get VideoID
-    # if len(json['items']) == 0:
-    #     logger.debug("This Channel is not upcoming")
-    #     return False
-
     # Create Live URL
     channelurl = "https://www.youtube.com/channel/" + channelid
     liveurl = channelurl + "/live"
@@ -59,7 +35,6 @@ def getLive(channelid):
 
     # Parse VideoID
     logger.debug('Parse VideoID...Channel ID: ' + channelid)
-    # try:
 
     target_html = lxml.html.fromstring(response)
     try:
@@ -69,11 +44,6 @@ def getLive(channelid):
         return False
 
     logger.debug("Get videourl : " + target_url)
-    # except Exception:
-    #     logger.debug('VideoID Parse Failed.')
-    #     return False
-    
-    # videoid = json['items'][0]['id']['videoId']
 
     if target_url == liveurl[:-5]:
         logger.debug("Not Setting LiveStream : " + liveurl[:-5])
@@ -116,7 +86,7 @@ def getLive(channelid):
                 'videotitle': json['items'][0]['snippet']['title'],
                 'channeltitle': json['items'][0]['snippet']['channelTitle'],
                 'starttime': json['items'][0]['liveStreamingDetails']['actualStartTime'],
-                'status': "Live🔴",
+                'status': "Live",
                 'liveurl': liveurl,
                 'channelurl': channelurl,
         }
@@ -128,7 +98,7 @@ def getLive(channelid):
                 'videotitle': json['items'][0]['snippet']['title'],
                 'channeltitle': json['items'][0]['snippet']['channelTitle'],
                 'starttime': json['items'][0]['liveStreamingDetails']['scheduledStartTime'],
-                'status': "Upcoming⌛",
+                'status': "Upcoming",
                 'liveurl': liveurl,
                 'channelurl': channelurl,
                 }
@@ -180,12 +150,12 @@ def updateLive(videoid):
     if json['items'][0]['snippet']['liveBroadcastContent'] == "live":
         live = json['items'][0]['liveStreamingDetails']['actualStartTime']
         live = datetime.datetime.fromisoformat(live[:-1])
-        status = "Live🔴"
+        status = "Live"
     else:
         # upcoming or completed
         live = json['items'][0]['liveStreamingDetails']['scheduledStartTime']
         live = datetime.datetime.fromisoformat(live[:-1])
-        status = "Upcoming⌛"
+        status = "Upcoming"
 
     # Compare Date
     today = datetime.date.today()
