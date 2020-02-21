@@ -1,12 +1,12 @@
 {% extends "cms/base.html" %}
-{% block title %}Liverary - YouTube LiveStream Table{% endblock title %}
+{% block title %}Liverary - Nijisanji LiveStream Table{% endblock title %}
 
 {% block content %}
-    <h4 class="mt-4 border-bottom">YouTube LiveStream Table<small class="text-danger"> Beta</small></h4>
+    <h4 class="mt-4 border-bottom">Nijisanji LiveStream Table<small class="text-danger"> Beta</small></h4>
     <table class="table table-sm table-borderless">
       <thead>
         <tr>
-          <th scope="col">Thumbnail</th>
+          <th scope="col"></th>
           <th scope="col">Channel / LiveStream Title</th>
           <th scope="col">Start Time</th>
           <th scope="col">Live Status</th>
@@ -44,7 +44,6 @@
               {% else %}
               <p>{{ live.status }}</p>
               {% endif %}
-              
             </div>
           </td>
         </tr>

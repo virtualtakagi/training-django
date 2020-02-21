@@ -2,6 +2,21 @@
 <!DOCTYPE html>{% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-158859832-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-158859832-1');
+</script>
+<meta content="バーチャルライバーグループ「にじさんじ」のYouTubeLiveスケジュールを一覧で提供します" name="description">
+<meta property="og:title" content="Liverary - Nijisanji LiveStream Table" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://liverary.tk" />
+<meta property="og:site_name" content="Liverary - Nijisanji LiveStream Table" />
+<meta property="og:description" content="バーチャルライバーグループ「にじさんじ」のYouTubeLiveスケジュールを一覧で提供します" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="{% static 'cms/css/bootstrap.min.css' %}">

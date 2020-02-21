@@ -14,4 +14,5 @@ urlpatterns = [
 
     # GetLiveInformation
     # path('update', views.getLiveStatus, name="get_liveStatus")
+    
 ]

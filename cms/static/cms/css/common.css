@@ -1,7 +1,11 @@
 * {
     font-size: 14px;
-    background-color: #424242;
     color:#FFF;
+}
+
+.container {
+    background-color: #424242;
+    border-radius: 15px;
 }
 
 .button {
