@@ -12,7 +12,7 @@
 - Liveテーブルから表示に使用するカラムは、thumbnail, channeltitle, videotitle, starttime, status, liveurl, channelurl とする。
 - デザインはイイ感じのサイトを参考にする。（未実装）
 
-## サーバ処理（バッチ処理）
+## バッチ処理
 
 - YouTubeチャンネルのIDを元に、当日に行われるライブストリームの情報をAPI経由で取得する。
 - 情報取得は毎時10分、30分、50分に Channel テーブルの channelid を引数に行う。
